@@ -22,6 +22,9 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     var completedTracker = false
     
+    private let unCompletedTrackerButtonImage = UIImage(systemName: "plus")
+    private let completedTrackerButtonImage = UIImage(named: "Checkmark")
+    
     lazy var trackerBackGroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -130,15 +133,20 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     private func updateButtonState() {
-        switch completedTracker {
-        case true:
-            trackerCounterButton.setImage(UIImage(named: "Checkmark"), for: .normal)
-            trackerCounterButton.alpha = 0.3
-            trackerCounterButton.tintColor = .ypWhite
-        case false:
-            trackerCounterButton.setImage(UIImage(systemName: "plus"), for: .normal)
-            trackerCounterButton.alpha = 1
-            trackerCounterButton.tintColor = .ypWhite
-        }
+//        switch completedTracker {
+//        case true:
+//            trackerCounterButton.setImage(completedTrackerButtonImage, for: .normal)
+//            trackerCounterButton.alpha = 0.3
+//            trackerCounterButton.tintColor = .ypWhite
+//        case false:
+//            trackerCounterButton.setImage(unCompletedTrackerButtonImage, for: .normal)
+//            trackerCounterButton.alpha = 1
+//            trackerCounterButton.tintColor = .ypWhite
+//        }
+        
+        let image = completedTracker ? completedTrackerButtonImage : unCompletedTrackerButtonImage
+        trackerCounterButton.setImage(image, for: .normal)
+        trackerCounterButton.alpha = completedTracker ? 0.3 : 1
+        trackerCounterButton.tintColor = .ypWhite
     }
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     
     private var categories: [TrackerCategory] = []
     private var completedTrackers: Set<TrackerRecord> = []
@@ -121,7 +121,7 @@ class MainViewController: UIViewController {
     
     @objc
     private func addTrackerButtonDidTapped() {
-        let newTracker = TrackerCreationViewController()
+        let newTracker = TrackerCreationViewController() /*HabitCreationViewController()*/
         newTracker.trackersViewController = self
         present(newTracker, animated: true)
     }
@@ -186,10 +186,16 @@ class MainViewController: UIViewController {
         guard let weekDay = WeekDay(calendarWeekday: weekdayIndex) else {
             return
         }
-        
-        visibleCategories = categories.compactMap{ category in
+        visibleCategories = categories.compactMap { category in
             let filtered = category.trackers.filter {
-                let matchesDay = searchText.isEmpty ? $0.schedule.contains(weekDay) : true
+                let matchesDay: Bool
+                if let schedule = $0.schedule {
+                    matchesDay = searchText.isEmpty ? schedule.contains(weekDay) : true
+                } else {
+                    matchesDay = searchText.isEmpty
+                    ? calendar.isDate($0.createdDate, inSameDayAs: currentDate)
+                    : true
+                }
                 let matchesSearch = searchText.isEmpty || $0.name.lowercased().contains(searchText.lowercased())
                 return matchesDay && matchesSearch
             }
@@ -231,8 +237,7 @@ extension MainViewController: UICollectionViewDataSource {
         let daysCount = completedTrackers.filter { $0.trackerId == tracker.id }.count
         cell.configure(tracker: tracker, isCompleted: isCompleted, daysCount: daysCount)
         cell.onCounterTaped = { [weak self] in
-            guard let self else { return }
-            guard currentDate.startOfDay <= Date().startOfDay else { return }
+            guard let self, currentDate.startOfDay <= Date().startOfDay else { return }
             
             let isNowCompleted = completedTrackers.contains {
                 $0.trackerId == tracker.id &&

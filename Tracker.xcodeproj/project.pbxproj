@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3FA6BD452FD82CDD0085FB88 /* IrregularEventCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA6BD442FD82CDD0085FB88 /* IrregularEventCreationViewController.swift */; };
 		3FBB02CB2FD71C7C00CBB02F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBB02C32FD71C7C00CBB02F /* AppDelegate.swift */; };
 		3FBB02CC2FD71C7C00CBB02F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBB02C82FD71C7C00CBB02F /* SceneDelegate.swift */; };
 		3FBB02CE2FD71C7C00CBB02F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3FBB02C42FD71C7C00CBB02F /* Assets.xcassets */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3FA6BD442FD82CDD0085FB88 /* IrregularEventCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IrregularEventCreationViewController.swift; sourceTree = "<group>"; };
 		3FBB02C32FD71C7C00CBB02F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3FBB02C42FD71C7C00CBB02F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3FBB02C52FD71C7C00CBB02F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -65,6 +67,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3FA6BD432FD82C140085FB88 /* IrregularEvent */ = {
+			isa = PBXGroup;
+			children = (
+				3FA6BD442FD82CDD0085FB88 /* IrregularEventCreationViewController.swift */,
+			);
+			path = IrregularEvent;
+			sourceTree = "<group>";
+		};
 		3FBB02CA2FD71C7C00CBB02F /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
@@ -134,6 +144,7 @@
 				3FBB02EF2FD71E3C00CBB02F /* MainViewController.swift */,
 				3FBB02F12FD71E4900CBB02F /* TrackerCreationViewController.swift */,
 				3FBB02DB2FD71D2500CBB02F /* Habit */,
+				3FA6BD432FD82C140085FB88 /* IrregularEvent */,
 				3FBB02F92FD71E8000CBB02F /* StatisticViewController.swift */,
 			);
 			path = ViewControllers;
@@ -254,6 +265,7 @@
 				3FBB02D32FD71C8C00CBB02F /* TabBarController.swift in Sources */,
 				3FBB02E02FD71D8700CBB02F /* FormatterDays.swift in Sources */,
 				3FBB02FA2FD71E8000CBB02F /* StatisticViewController.swift in Sources */,
+				3FA6BD452FD82CDD0085FB88 /* IrregularEventCreationViewController.swift in Sources */,
 				3FBB02CC2FD71C7C00CBB02F /* SceneDelegate.swift in Sources */,
 				3FBB02E42FD71DA600CBB02F /* TrackerCategory.swift in Sources */,
 			);

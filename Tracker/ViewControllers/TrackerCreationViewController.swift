@@ -59,7 +59,9 @@ final class TrackerCreationViewController: UIViewController {
     
     @objc
     private func irregularEventButtonDidTapped() {
-        
+        let newIrregularEvent = IrregularEventCreationViewController()
+        newIrregularEvent.trackersViewController = trackersViewController
+        present(newIrregularEvent, animated: true)
     }
     
     private func setupLayoutAndConstraints() {

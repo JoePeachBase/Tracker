@@ -1,33 +1,23 @@
 //
-//  HabitCreationViewController.swift
+//  UnRegularEventCreationViewController.swift
 //  Tracker
 //
-//  Created by Dinar Mukhlisov on 08.06.2026.
+//  Created by Dinar Mukhlisov on 09.06.2026.
 //
 
 import UIKit
 
-protocol TrackerActionProtocol {
-    func add(tracker: Tracker)
-    func reload()
-}
-
-final class HabitCreationViewController: UIViewController {
+final class IrregularEventCreationViewController: UIViewController {
     
     var trackersViewController: TrackerActionProtocol?
     
     private let cellReuseIdentifier = "habitCell"
-    private var selectedCategory = "Домашний уют" // Mock
-    private var selectedDays: [WeekDay] = []
-    
-    private lazy var charLabelHeightConstraint: NSLayoutConstraint = {
-        charLimitsLabel.heightAnchor.constraint(equalToConstant: 0)
-    }()
+    private var selectedCategory = "Домашний уют"
     
     private lazy var header: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Новая привычка"
+        label.text = "Новое нерегулярное событие"
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
         return label
@@ -44,16 +34,6 @@ final class HabitCreationViewController: UIViewController {
         textField.returnKeyType = .done
         textField.becomeFirstResponder()
         return textField
-    }()
-    
-    private lazy var charLimitsLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Ограничение 38 символов"
-        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        label.textColor = .ypRed
-        label.isHidden = true
-        return label
     }()
     
     private lazy var trackersTableView: UITableView = {
@@ -98,12 +78,25 @@ final class HabitCreationViewController: UIViewController {
         setupTextField()
     }
     
+    @objc
+    private func cancelButtonDidTapped() {
+        dismiss(animated: true)
+    }
+    
+    @objc
+    private func createButtonDidTapped() {
+        guard let text = trackerNameTextField.text, !text.isEmpty else { return }
+        let newTracker = Tracker(id: UUID(), name: text, emoji: "🤡", schedule: nil, color: .ypColorSelection2, createdDate: Date())
+        trackersViewController?.add(tracker: newTracker)
+        trackersViewController?.reload()
+        self.view.window?.rootViewController?.dismiss(animated: true)
+    }
+    
     private func setupLayoutAndConstraints() {
         view.backgroundColor = .ypWhite
         
         view.addSubview(header)
         view.addSubview(trackerNameTextField)
-        view.addSubview(charLimitsLabel)
         view.addSubview(trackersTableView)
         view.addSubview(cancelButton)
         view.addSubview(createButton)
@@ -118,13 +111,10 @@ final class HabitCreationViewController: UIViewController {
             trackerNameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             trackerNameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            charLimitsLabel.topAnchor.constraint(equalTo: trackerNameTextField.bottomAnchor, constant: 8),
-            charLimitsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            trackersTableView.topAnchor.constraint(equalTo: charLimitsLabel.bottomAnchor, constant: 24),
+            trackersTableView.topAnchor.constraint(equalTo: trackerNameTextField.bottomAnchor, constant: 24),
             trackersTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             trackersTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            trackersTableView.heightAnchor.constraint(equalToConstant: 149),
+            trackersTableView.heightAnchor.constraint(equalToConstant: 75),
             
             cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -34),
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -136,21 +126,6 @@ final class HabitCreationViewController: UIViewController {
             createButton.heightAnchor.constraint(equalToConstant: 60),
             createButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: (view.frame.width/2) + 4)
         ])
-        charLabelHeightConstraint.isActive = true
-    }
-    
-    @objc
-    private func cancelButtonDidTapped() {
-        dismiss(animated: true)
-    }
-    
-    @objc
-    private func createButtonDidTapped() {
-        guard let text = trackerNameTextField.text, !text.isEmpty else { return }
-        let newTracker = Tracker(id: UUID(), name: text, emoji: "🤡", schedule: selectedDays, color: .ypColorSelection1, createdDate: Date())
-        trackersViewController?.add(tracker: newTracker)
-        trackersViewController?.reload()
-        self.view.window?.rootViewController?.dismiss(animated: true)
     }
     
     private func setupTableView() {
@@ -165,58 +140,26 @@ final class HabitCreationViewController: UIViewController {
     
     private func updateCreateButtonState() {
         let isTextFieldEmpty = trackerNameTextField.text?.isEmpty ?? true
-        let isSelectedDaysEmpty = selectedDays.isEmpty
         
-        let isEnabled = !isTextFieldEmpty && !isSelectedDaysEmpty
+        let isEnabled = !isTextFieldEmpty
         createButton.isEnabled = isEnabled
         createButton.backgroundColor = isEnabled ? .ypBlack : .ypGray
     }
 }
 
-extension HabitCreationViewController: UITableViewDelegate {
+extension IrregularEventCreationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let row = HabitRow(rawValue: indexPath.row) {
-            switch row {
-            case .category:
-                // TODO: - Category
-                return
-            case .schedule:
-                let vc = HabitScheduleViewController()
-                vc.selectedDays = selectedDays
-                vc.onScheduleSelected = { [weak self] days in
-                    guard let self else { return }
-                    self.selectedDays = days
-                    self.trackersTableView.reloadRows(
-                        at: [IndexPath(row: HabitRow.schedule.rawValue, section: 0)],
-                        with: .none)
-                    self.updateCreateButtonState()
-                }
-                present(vc, animated: true)
-            }
-        } else {
-            
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let separatorInset: CGFloat = 16
-        let separatorWidth = tableView.bounds.width - separatorInset * 2
-        let separatorHeight: CGFloat = 1.0
-        let separatorX = separatorInset
-        let separatorY = cell.frame.height - separatorHeight
-        let separatorView = UIView(frame: CGRect(x: separatorX, y: separatorY, width: separatorWidth, height: separatorHeight))
-        separatorView.backgroundColor = .ypGray
-        cell.addSubview(separatorView)
+        // TODO: - Category
     }
 }
 
-extension HabitCreationViewController: UITableViewDataSource {
+extension IrregularEventCreationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        2
+        1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -226,12 +169,8 @@ extension HabitCreationViewController: UITableViewDataSource {
             switch row {
             case .category:
                 cell.configure(title: "Категория", subtitle: selectedCategory)
-            case .schedule:
-                let subtitle = selectedDays.isEmpty ? nil :
-                selectedDays.sorted { $0.rawValue < $1.rawValue }
-                    .map { $0.shortTitle }
-                    .joined(separator: ", ")
-                cell.configure(title: "Расписание", subtitle: subtitle)
+            default:
+                cell.configure(title: "", subtitle: "")
             }
         } else {
             cell.title.text = "Новая строка" // при добавлении новых критериев
@@ -241,7 +180,7 @@ extension HabitCreationViewController: UITableViewDataSource {
     }
 }
 
-extension HabitCreationViewController: UITextFieldDelegate {
+extension IrregularEventCreationViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         updateCreateButtonState()
     }
@@ -250,23 +189,7 @@ extension HabitCreationViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let currentText = textField.text ?? ""
-        
-        // Формируем новый текст после предполагаемого изменения
-        guard let stringRange = Range(range, in: currentText) else { return false }
-        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
-        
-        // Лимит символов
-        let limit = 38
-        let isOverLimit = updatedText.count >= limit
-        
-        charLimitsLabel.isHidden = !isOverLimit
-        charLabelHeightConstraint.constant = isOverLimit ? 22 : 0
-        
-        // Разрешаем изменение, только если длина нового текста не превышает лимит
-        return updatedText.count <= limit
-        
-    }
 }
+
+
+

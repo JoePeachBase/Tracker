@@ -46,12 +46,17 @@ final class HabitTableViewCell: UITableViewCell {
         setupLayoutAndConstraints()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
     
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+    
     private func setupLayoutAndConstraints() {
-        backgroundColor = .ypBackgorund
+        backgroundColor = .ypBackground
         selectionStyle = .none
         clipsToBounds = true
         
@@ -83,5 +88,5 @@ final class HabitTableViewCell: UITableViewCell {
 
 enum HabitRow: Int {
     case category = 0
-    case schedule = 1
+    case schedule 
 }

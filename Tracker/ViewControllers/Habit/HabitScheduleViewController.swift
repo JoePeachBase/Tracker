@@ -131,7 +131,7 @@ extension HabitScheduleViewController: UITableViewDataSource {
         config.text = day.name
         cell.contentConfiguration = config
         cell.selectionStyle = .none
-        cell.backgroundColor = .ypBackgorund
+        cell.backgroundColor = .ypBackground
         
         let toggle = UISwitch()
         toggle.isOn = selectedDays.contains(day)

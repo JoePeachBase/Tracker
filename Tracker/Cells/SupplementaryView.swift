@@ -34,3 +34,8 @@ final class SupplementaryView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+//enum TrackerSection: Int, CaseIterable {
+//    case emoji
+//    case color
+//}

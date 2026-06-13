@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F93BDAB2FDADC9000B38A07 /* SelectableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F93BDAA2FDADC9000B38A07 /* SelectableCell.swift */; };
 		3FA6BD452FD82CDD0085FB88 /* IrregularEventCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA6BD442FD82CDD0085FB88 /* IrregularEventCreationViewController.swift */; };
 		3FBB02CB2FD71C7C00CBB02F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBB02C32FD71C7C00CBB02F /* AppDelegate.swift */; };
 		3FBB02CC2FD71C7C00CBB02F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBB02C82FD71C7C00CBB02F /* SceneDelegate.swift */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3F93BDAA2FDADC9000B38A07 /* SelectableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableCell.swift; sourceTree = "<group>"; };
 		3FA6BD442FD82CDD0085FB88 /* IrregularEventCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IrregularEventCreationViewController.swift; sourceTree = "<group>"; };
 		3FBB02C32FD71C7C00CBB02F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3FBB02C42FD71C7C00CBB02F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			children = (
 				3FBB02E92FD71DEB00CBB02F /* HabitTableViewCell.swift */,
 				3FBB02EB2FD71DF900CBB02F /* TrackerCollectionViewCell.swift */,
+				3F93BDAA2FDADC9000B38A07 /* SelectableCell.swift */,
 				3FBB02ED2FD71E0D00CBB02F /* SupplementaryView.swift */,
 			);
 			path = Cells;
@@ -260,6 +263,7 @@
 				3FBB02F82FD71E7400CBB02F /* HabitScheduleViewController.swift in Sources */,
 				3FBB02F42FD71E5B00CBB02F /* HabitCreationViewController.swift in Sources */,
 				3FBB02EE2FD71E0D00CBB02F /* SupplementaryView.swift in Sources */,
+				3F93BDAB2FDADC9000B38A07 /* SelectableCell.swift in Sources */,
 				3FBB02F22FD71E4900CBB02F /* TrackerCreationViewController.swift in Sources */,
 				3FBB02DE2FD71D6B00CBB02F /* UITextField+padding.swift in Sources */,
 				3FBB02D32FD71C8C00CBB02F /* TabBarController.swift in Sources */,

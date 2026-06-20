@@ -9,8 +9,11 @@ import UIKit
 
 final class MainViewController: UIViewController {
     
-    private var categories: [TrackerCategory] = []
-    private var completedTrackers: Set<TrackerRecord> = []
+    private let trackerStore: TrackerStore
+    private let categoryStore: TrackerCategoryStore
+    private let recordStore: TrackerRecordStore
+    private var categories: [TrackerCategory] { categoryStore.categories }
+    private var completedTrackers: Set<TrackerRecord>  {  recordStore.records }
     private var visibleCategories: [TrackerCategory] = []
     private var currentDate = Date()
     private var currentSearchText: String = ""
@@ -86,11 +89,31 @@ final class MainViewController: UIViewController {
         return collectionView
     }()
     
+    init(trackerStore: TrackerStore, categoryStore: TrackerCategoryStore, recordStore: TrackerRecordStore) {
+        self.trackerStore = trackerStore
+        self.categoryStore = categoryStore
+        self.recordStore = recordStore
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        nil
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        trackerStore.delegate = self
+        categoryStore.delegate = self
+        recordStore.delegate = self
+        
         setupNavigationBar()
         setupLayoutAndConstraints()
         setupCollectionView()
+        updateVisibleCategories()
+        collectionView.reloadData()
+        setupEmptyScreen()
     }
     
     private func setupCollectionView() {
@@ -244,12 +267,17 @@ extension MainViewController: UICollectionViewDataSource {
                 Calendar.current.isDate($0.date, inSameDayAs: self.currentDate.startOfDay)
             }
             
-            if isNowCompleted {
-                completedTrackers.remove(TrackerRecord(trackerId: tracker.id, date: currentDate.startOfDay))
-            } else {
-                completedTrackers.insert(TrackerRecord(trackerId: tracker.id, date: currentDate.startOfDay))
+            do {
+                let record = TrackerRecord(trackerId: tracker.id, date: currentDate.startOfDay)
+                if isNowCompleted {
+                    try recordStore.deleteRecord(record)
+                } else {
+                    try recordStore.addRecord(record)
+                }
+                collectionView.reloadItems(at: [indexPath])
+            } catch {
+                print("Ошибка обновления записи: \(error)")
             }
-            collectionView.reloadItems(at: [indexPath])
             
         }
         return cell
@@ -262,12 +290,15 @@ extension MainViewController: UICollectionViewDataSource {
 
 extension MainViewController: TrackerActionProtocol {
     func add(tracker: Tracker) {
-        let categoryTitle = "Домашний уют" // пока заглушка
-        if let index = categories.firstIndex(where: { $0.title == categoryTitle }) {
-            let old = categories[index]
-            categories[index] = TrackerCategory(title: old.title, trackers: old.trackers + [tracker])
-        } else {
-            categories.append(TrackerCategory(title: categoryTitle, trackers: [tracker]))
+        let categoryTitle = "Домашний уют" // позже заменим на выбор пользователя
+        do {
+            if categoryStore.categoryCoreData(with: categoryTitle) == nil {
+                try categoryStore.addCategory(TrackerCategory(title: categoryTitle, trackers: []))
+            }
+            guard let categoryCoreData = categoryStore.categoryCoreData(with: categoryTitle) else { return }
+            try trackerStore.addTracker(tracker, to: categoryCoreData)
+        } catch {
+            print("Ошибка сохранения трекера: \(error)")
         }
     }
     
@@ -280,22 +311,42 @@ extension MainViewController: TrackerActionProtocol {
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         CGSize(width: (collectionView.bounds.width - 16 * 2 - 9) / 2, height: 148)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        
         CGSize(width: collectionView.frame.width, height: 30)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        
         9
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        
         UIEdgeInsets(top: 10, left: 0, bottom: 16, right: 0)
+    }
+}
+
+extension MainViewController: TrackerStoreDelegate {
+    func didUpdateTrackers() {
+        updateVisibleCategories()
+        collectionView.reloadData()
+        setupEmptyScreen()
+    }
+}
+
+extension MainViewController: TrackerCategoryStoreDelegate {
+    func didUpdateCategories() {
+        updateVisibleCategories()
+        collectionView.reloadData()
+        setupEmptyScreen()
+    }
+}
+
+extension MainViewController: TrackerRecordStoreDelegate {
+    func didUpdateRecords() {
+        updateVisibleCategories()
+        collectionView.reloadData()
+        setupEmptyScreen()
     }
 }

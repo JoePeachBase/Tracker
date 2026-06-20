@@ -28,8 +28,57 @@ final class SelectableCell: UICollectionViewCell {
         setupLayoutAndConstraints()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // Полный сброс перед переиспользованием
+        resetCells()
+    }
+    
+    func configure(with content: SelectableCellContent) {
+        resetCells()
+        
+        switch content {
+        case .emoji(let string):
+            emojiLabel.isHidden = false
+            emojiLabel.text = string
+        case .color(let color):
+            emojiLabel.isHidden = true
+            colorImageView.isHidden = false
+            colorImageView.backgroundColor = color
+        }
+    }
+    
+    func setSelected(_ selected: Bool) {
+        if selected {
+            if let existingColor = colorImageView.backgroundColor {
+                layer.cornerRadius = 12
+                layer.borderWidth = 3
+                layer.borderColor = existingColor.withAlphaComponent(0.3).cgColor
+            } else {
+                layer.cornerRadius = 16
+                layer.backgroundColor = UIColor.ypLightGray.cgColor
+            }
+            
+        } else {
+            layer.borderWidth = 0
+            layer.borderColor = nil
+        }
+    }
+    
+    private func resetCells() {
+        emojiLabel.isHidden = true
+        emojiLabel.text = nil
+        colorImageView.isHidden = true
+        colorImageView.backgroundColor = nil
+        backgroundColor = .clear
+        layer.borderWidth = 0
+        layer.borderColor = nil
+        layer.backgroundColor = nil
     }
     
     private func setupLayoutAndConstraints() {
@@ -45,17 +94,6 @@ final class SelectableCell: UICollectionViewCell {
             colorImageView.heightAnchor.constraint(equalToConstant: 40),
             colorImageView.widthAnchor.constraint(equalToConstant: 40)
         ])
-    }
-    
-    func configure(with content: SelectableCellContent) {
-        switch content {
-        case .emoji(let string):
-            emojiLabel.isHidden = false
-            emojiLabel.text = string
-        case .color(let color):
-            emojiLabel.isHidden = true
-            colorImageView.backgroundColor = color
-        }
     }
 }
 

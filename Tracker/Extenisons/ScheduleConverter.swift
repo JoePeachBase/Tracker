@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ScheduleConverter {
+final class ScheduleConverter {
     func toString(_ weekDays: [WeekDay]) -> String {
         weekDays.map { String($0.rawValue) }.joined()
     }

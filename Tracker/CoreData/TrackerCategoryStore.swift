@@ -27,7 +27,6 @@ final class TrackerCategoryStore: NSObject {
     
     private let context: NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>
-    private let colorMarshalling = ColorMarshalling()
     
     init(context: NSManagedObjectContext) {
         self.context = context
@@ -77,7 +76,7 @@ final class TrackerCategoryStore: NSObject {
                 name: name,
                 emoji: emoji,
                 schedule: schedule,
-                color: colorMarshalling.color(from: colorHex),
+                color: ColorMarshalling.color(from: colorHex),
                 createdDate: createdDate
             )
         } ?? []
@@ -88,6 +87,6 @@ final class TrackerCategoryStore: NSObject {
 
 extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-            delegate?.didUpdateCategories()
-        }
+        delegate?.didUpdateCategories()
+    }
 }

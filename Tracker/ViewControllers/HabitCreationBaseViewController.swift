@@ -23,10 +23,11 @@ class TrackerCreationBaseViewController: UIViewController {
 
     // MARK: - Общие свойства
 
+    let charsLimit = 38
     let cellReuseIdentifier = "habitCell"
     var selectedCategory = "Домашний уют"
-    var selectedEmojiIndex: Int? = nil
-    var selectedColorIndex: Int? = nil
+    var selectedEmojiIndex: Int?
+    var selectedColorIndex: Int?
 
     let emojis = [
         "🙂", "😻", "🌺", "🐶", "❤️", "😱",
@@ -94,7 +95,7 @@ class TrackerCreationBaseViewController: UIViewController {
     lazy var charLimitsLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Ограничение 38 символов"
+        label.text = "Ограничение \(charsLimit) символов"
         label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         label.textColor = .ypRed
         label.isHidden = true
@@ -283,7 +284,7 @@ extension TrackerCreationBaseViewController: UITableViewDelegate {
 
 extension TrackerCreationBaseViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        Int(tableViewHeight / 75) // 149 → 2 строки, 75 → 1 строка
+        Int(tableViewHeight / 75) // 150 → 2 строки, 75 → 1 строка
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -309,11 +310,11 @@ extension TrackerCreationBaseViewController: UITextFieldDelegate {
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
 
-        let isOverLimit = updatedText.count >= 38
+        let isOverLimit = updatedText.count >= charsLimit
         charLimitsLabel.isHidden = !isOverLimit
         charLabelHeightConstraint.constant = isOverLimit ? 22 : 0
 
-        return updatedText.count <= 38
+        return updatedText.count <= charsLimit
     }
 }
 

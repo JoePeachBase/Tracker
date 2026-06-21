@@ -28,7 +28,6 @@ final class TrackerStore: NSObject {
     private let context:NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<TrackerCoreData>
     private let scheduleConverter = ScheduleConverter()
-    private let colorMarshalling = ColorMarshalling()
     
     init(context: NSManagedObjectContext) {
         self.context = context
@@ -53,9 +52,9 @@ final class TrackerStore: NSObject {
         coreData.id = tracker.id
         coreData.name = tracker.name
         coreData.emoji = tracker.emoji
-        coreData.colorHex = colorMarshalling.hexString(from: tracker.color)
+        coreData.colorHex = ColorMarshalling.hexString(from: tracker.color)
         coreData.createdDate = tracker.createdDate
-        coreData.schedule = tracker.schedule.map { scheduleConverter.toString($0)} as? NSObject
+        coreData.schedule = tracker.schedule.map { scheduleConverter.toString($0)} as NSObject?
         coreData.category = category
         try context.save()
     }
@@ -78,7 +77,7 @@ final class TrackerStore: NSObject {
             scheduleConverter.toWeekDays($0)
         }
         
-        return Tracker(id: id, name: name, emoji: emoji, schedule: schedule, color: colorMarshalling.color(from: colorHex), createdDate: createdDate)
+        return Tracker(id: id, name: name, emoji: emoji, schedule: schedule, color: ColorMarshalling.color(from: colorHex), createdDate: createdDate)
     }
 }
 

@@ -78,15 +78,9 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         setupLayoutAndConstraints()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func configure(tracker: Tracker, isCompleted: Bool, daysCount: Int) {
-        self.tracker = tracker
-        completedTracker = isCompleted
-        daysPassedLabel.text = "\(daysCount) дней"
-        updateButtonState()
+        nil
     }
     
     @objc
@@ -132,18 +126,14 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         updateButtonState()
     }
     
+    func configure(tracker: Tracker, isCompleted: Bool, daysCount: Int) {
+        self.tracker = tracker
+        completedTracker = isCompleted
+        daysPassedLabel.text = "\(daysCount) дней"
+        updateButtonState()
+    }
+    
     private func updateButtonState() {
-//        switch completedTracker {
-//        case true:
-//            trackerCounterButton.setImage(completedTrackerButtonImage, for: .normal)
-//            trackerCounterButton.alpha = 0.3
-//            trackerCounterButton.tintColor = .ypWhite
-//        case false:
-//            trackerCounterButton.setImage(unCompletedTrackerButtonImage, for: .normal)
-//            trackerCounterButton.alpha = 1
-//            trackerCounterButton.tintColor = .ypWhite
-//        }
-        
         let image = completedTracker ? completedTrackerButtonImage : unCompletedTrackerButtonImage
         trackerCounterButton.setImage(image, for: .normal)
         trackerCounterButton.alpha = completedTracker ? 0.3 : 1

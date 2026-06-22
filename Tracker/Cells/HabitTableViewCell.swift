@@ -51,9 +51,15 @@ final class HabitTableViewCell: UITableViewCell {
         nil
     }
     
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
+    func configure(title: String, subtitle: String?) {
+        self.title.text = title
+        if let subtitle, !subtitle.isEmpty {
+            self.subtitle.text = subtitle
+            self.subtitle.isHidden = false
+        } else {
+            self.subtitle.isHidden = true
+        }
+    }
     
     private func setupLayoutAndConstraints() {
         backgroundColor = .ypBackground
@@ -73,16 +79,6 @@ final class HabitTableViewCell: UITableViewCell {
             chevronImage.widthAnchor.constraint(equalToConstant: 24),
             chevronImage.heightAnchor.constraint(equalToConstant: 24)
         ])
-    }
-    
-    func configure(title: String, subtitle: String?) {
-        self.title.text = title
-        if let subtitle, !subtitle.isEmpty {
-            self.subtitle.text = subtitle
-            self.subtitle.isHidden = false
-        } else {
-            self.subtitle.isHidden = true
-        }
     }
 }
 

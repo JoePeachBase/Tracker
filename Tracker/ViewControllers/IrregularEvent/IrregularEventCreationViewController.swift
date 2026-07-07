@@ -18,7 +18,14 @@ final class IrregularEventCreationViewController: TrackerCreationBaseViewControl
     }
 
     override func handleRowSelection(at indexPath: IndexPath) {
-        // TODO: - Category
+        let vc = HabitCategoryViewController(categoryStore: categoryStore, selectedCategory: selectedCategory)
+        vc.onCategorySelected = { [weak self] title in
+            guard let self else { return }
+            self.selectedCategory = title
+            self.trackersTableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+            self.updateCreateButtonState()
+        }
+        present(vc, animated: true)
     }
 }
 

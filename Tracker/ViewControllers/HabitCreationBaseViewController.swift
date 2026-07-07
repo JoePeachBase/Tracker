@@ -10,6 +10,9 @@ import UIKit
 class TrackerCreationBaseViewController: UIViewController {
 
     var trackersViewController: TrackerActionProtocol?
+    let categoryStore: TrackerCategoryStore
+    
+    private let separatorTag = 999
 
     // MARK: - Переопределяется в наследниках
 
@@ -25,7 +28,7 @@ class TrackerCreationBaseViewController: UIViewController {
 
     let charsLimit = 38
     let cellReuseIdentifier = "habitCell"
-    var selectedCategory = "Домашний уют"
+    var selectedCategory: String?
     var selectedEmojiIndex: Int?
     var selectedColorIndex: Int?
 
@@ -142,6 +145,14 @@ class TrackerCreationBaseViewController: UIViewController {
         button.isEnabled = false
         return button
     }()
+    
+    init(categoryStore: TrackerCategoryStore) {
+        self.categoryStore = categoryStore
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { nil }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -159,7 +170,8 @@ class TrackerCreationBaseViewController: UIViewController {
     @objc private func createButtonDidTapped() {
         guard let text = trackerNameTextField.text, !text.isEmpty,
               let emoji = selectedEmoji,
-              let color = selectedColor
+              let color = selectedColor,
+              let categoryTitle = selectedCategory
         else { return }
 
         let newTracker = Tracker(
@@ -170,7 +182,7 @@ class TrackerCreationBaseViewController: UIViewController {
             color: color,
             createdDate: Date()
         )
-        trackersViewController?.add(tracker: newTracker)
+        trackersViewController?.add(tracker: newTracker, categoryTitle: categoryTitle)
         trackersViewController?.reload()
         view.window?.rootViewController?.dismiss(animated: true)
     }
@@ -179,6 +191,7 @@ class TrackerCreationBaseViewController: UIViewController {
         let isEnabled = !(trackerNameTextField.text?.isEmpty ?? true)
             && selectedEmojiIndex != nil
             && selectedColorIndex != nil
+            && selectedCategory != nil
             && additionalCreateButtonValidation()
         createButton.isEnabled = isEnabled
         createButton.backgroundColor = isEnabled ? .ypBlack : .ypGray
@@ -274,10 +287,12 @@ extension TrackerCreationBaseViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.viewWithTag(separatorTag)?.removeFromSuperview()
         let isLast = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
         guard !isLast else { return }
         let separator = UIView(frame: CGRect(x: 16, y: cell.frame.height - 1, width: tableView.bounds.width - 32, height: 1))
         separator.backgroundColor = .ypGray
+        separator.tag = separatorTag
         cell.addSubview(separator)
     }
 }

@@ -13,17 +13,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = scene as? UIWindowScene else { return }
         
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
         window = UIWindow(windowScene: windowScene)
+        
+        let userDefaults = UserDefaults.standard
+        let isFirstAppStart = !OnboardingStorage.hasSeenOnboarding
+        
+        if isFirstAppStart {
+            window?.rootViewController = OnboardingViewController(coreDataManager: appDelegate.coreDataManager)
+        } else {
+            window?.rootViewController = TabBarController(coreDataManager: appDelegate.coreDataManager)
+        }
+        
         window?.windowScene = windowScene
         window?.makeKeyAndVisible()
-        window?.rootViewController = TabBarController(coreDataManager: appDelegate.coreDataManager)
+    }
+}
+
+enum OnboardingStorage {
+    private static let key = "hasSeenOnboarding"
+    static var hasSeenOnboarding: Bool {
+        get { UserDefaults.standard.bool(forKey: key) }
+        set { UserDefaults.standard.set(newValue, forKey: key) }
     }
 }
 

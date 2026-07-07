@@ -8,7 +8,7 @@
 import UIKit
 
 protocol TrackerActionProtocol {
-    func add(tracker: Tracker)
+    func add(tracker: Tracker, categoryTitle: String)
     func reload()
 }
 
@@ -40,18 +40,35 @@ final class HabitCreationViewController: TrackerCreationBaseViewController {
     }
 
     override func handleRowSelection(at indexPath: IndexPath) {
-        guard HabitRow(rawValue: indexPath.row) == .schedule else { return }
-        let vc = HabitScheduleViewController()
-        vc.selectedDays = selectedDays
-        vc.onScheduleSelected = { [weak self] days in
-            guard let self else { return }
-            self.selectedDays = days
-            self.trackersTableView.reloadRows(
-                at: [IndexPath(row: HabitRow.schedule.rawValue, section: 0)],
-                with: .none)
-            self.updateCreateButtonState()
+        switch HabitRow(rawValue: indexPath.row) {
+        case .schedule:
+            let vc = HabitScheduleViewController()
+            vc.selectedDays = selectedDays
+            vc.onScheduleSelected = { [weak self] days in
+                guard let self else { return }
+                self.selectedDays = days
+                self.trackersTableView.reloadRows(
+                    at: [IndexPath(row: HabitRow.schedule.rawValue, section: 0)],
+                    with: .none)
+                self.updateCreateButtonState()
+            }
+            present(vc, animated: true)
+            
+        case .category:
+            let vc = HabitCategoryViewController(categoryStore: categoryStore, selectedCategory: selectedCategory)
+            vc.onCategorySelected = { [weak self] title in
+                guard let self else { return }
+                self.selectedCategory = title
+                self.trackersTableView.reloadRows(
+                    at: [IndexPath(row: HabitRow.category.rawValue, section: 0)],
+                    with: .none)
+                self.updateCreateButtonState()
+            }
+            present(vc, animated: true)
+            
+        default:
+            break
         }
-        present(vc, animated: true)
     }
 }
 

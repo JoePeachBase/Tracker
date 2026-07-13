@@ -10,6 +10,7 @@ import UIKit
 final class TrackerCreationViewController: UIViewController {
     
     var trackersViewController: TrackerActionProtocol?
+    private let categoryStore: TrackerCategoryStore
     
     private lazy var header: UILabel = {
         let label = UILabel()
@@ -44,22 +45,29 @@ final class TrackerCreationViewController: UIViewController {
         return button
     }()
     
+    init(categoryStore: TrackerCategoryStore) {
+        self.categoryStore = categoryStore
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { nil }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupLayoutAndConstraints()
     }
     
     @objc
     private func habitButtonDidTapped() {
-        let newHabit = HabitCreationViewController()
+        let newHabit = HabitCreationViewController(categoryStore: categoryStore)
         newHabit.trackersViewController = trackersViewController
         present(newHabit, animated: true)
     }
     
     @objc
     private func irregularEventButtonDidTapped() {
-        let newIrregularEvent = IrregularEventCreationViewController()
+        let newIrregularEvent = IrregularEventCreationViewController(categoryStore: categoryStore)
         newIrregularEvent.trackersViewController = trackersViewController
         present(newIrregularEvent, animated: true)
     }

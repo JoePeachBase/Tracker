@@ -52,6 +52,20 @@ final class TrackerCategoryStore: NSObject {
         try context.save()
     }
     
+    func deleteCategory(_ category: TrackerCategory) throws {
+        guard let coreData = fetchedResultsController.fetchedObjects?.first(where: { $0.title == category.title })
+        else { return }
+        context.delete(coreData)
+        try context.save()
+    }
+    
+    func renameCategory(from oldTitle: String, to newTitle: String) throws {
+        guard let coreData = fetchedResultsController.fetchedObjects?.first(where: { $0.title == oldTitle })
+        else { return }
+        coreData.title = newTitle
+        try context.save()
+    }
+    
     func categoryCoreData(with title: String) -> TrackerCategoryCoreData? {
         fetchedResultsController.fetchedObjects?.first { $0.title == title}
     }

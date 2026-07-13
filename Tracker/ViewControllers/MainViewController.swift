@@ -97,9 +97,7 @@ final class MainViewController: UIViewController {
     }
     
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        nil
-    }
+    required init?(coder: NSCoder) { nil }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -144,7 +142,7 @@ final class MainViewController: UIViewController {
     
     @objc
     private func addTrackerButtonDidTapped() {
-        let newTracker = TrackerCreationViewController() /*HabitCreationViewController()*/
+        let newTracker = TrackerCreationViewController(categoryStore: categoryStore)
         newTracker.trackersViewController = self
         present(newTracker, animated: true)
     }
@@ -289,8 +287,7 @@ extension MainViewController: UICollectionViewDataSource {
 }
 
 extension MainViewController: TrackerActionProtocol {
-    func add(tracker: Tracker) {
-        let categoryTitle = "Домашний уют" // позже заменим на выбор пользователя
+    func add(tracker: Tracker, categoryTitle: String) {
         do {
             if categoryStore.categoryCoreData(with: categoryTitle) == nil {
                 try categoryStore.addCategory(TrackerCategory(title: categoryTitle, trackers: []))

@@ -16,7 +16,7 @@ final class HabitScheduleViewController: UIViewController {
     private lazy var header: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Расписание"
+        label.text = "schedule".localized
         label.textColor = .ypBlack
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
@@ -37,7 +37,7 @@ final class HabitScheduleViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Готово", for: .normal)
+        button.setTitle("done.button".localized, for: .normal)
         button.setTitleColor(.ypWhite, for: .normal)
         button.backgroundColor = .ypBlack
         button.layer.cornerRadius = 16
@@ -137,6 +137,8 @@ extension HabitScheduleViewController: UITableViewDataSource {
         toggle.isOn = selectedDays.contains(day)
         toggle.tag = indexPath.row
         toggle.onTintColor = .ypBlue
+        toggle.backgroundColor = UIColor.ypLightGray
+        toggle.layer.cornerRadius = 16
         toggle.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
         cell.accessoryView = toggle
         

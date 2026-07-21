@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import AppMetricaCore
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,8 +15,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     let coreDataManager = CoreDataManager()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        true
+        if let configuration = AppMetricaConfiguration(apiKey: "e38fc50f-2f37-4f11-9719-199b67f4f464") {
+            AppMetrica.activate(with: configuration)
+        }
+        return true
     }
 
     // MARK: UISceneSession Lifecycle

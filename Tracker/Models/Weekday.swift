@@ -19,31 +19,31 @@ enum WeekDay: Int, CaseIterable {
     var name: String {
         switch self {
         case .monday:
-            "Понедельник"
+            "weekdays.monday".localized
         case .tuesday:
-            "Вторник"
+            "weekdays.tuesday".localized
         case .wednesday:
-            "Среда"
+            "weekdays.wednesday".localized
         case .thursday:
-            "Четверг"
+            "weekdays.thursday".localized
         case .friday:
-            "Пятница"
+            "weekdays.friday".localized
         case .saturday:
-            "Суббота"
+            "weekdays.saturday".localized
         case .sunday:
-            "Воскресенье"
+            "weekdays.sunday".localized
         }
     }
     
     var shortTitle: String {
         switch self {
-        case .monday: "Пн"
-        case .tuesday: "Вт"
-        case .wednesday: "Ср"
-        case .thursday: "Чт"
-        case .friday: "Пт"
-        case .saturday: "Сб"
-        case .sunday: "Вс"
+        case .monday: "weekdays.mon".localized
+        case .tuesday: "weekdays.tue".localized
+        case .wednesday: "weekdays.wed".localized
+        case .thursday: "weekdays.thu".localized
+        case .friday: "weekdays.fri".localized
+        case .saturday: "weekdays.sat".localized
+        case .sunday: "weekdays.sun".localized
         }
     }
 }

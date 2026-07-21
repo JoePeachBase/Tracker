@@ -72,8 +72,13 @@ final class TrackerRecordStore: NSObject {
     }
 }
 
+extension Notification.Name {
+    static let trackerRecordsDidChange = Notification.Name("trackerRecordsDidChange")
+}
+
 extension TrackerRecordStore: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         delegate?.didUpdateRecords()
+        NotificationCenter.default.post(name: .trackerRecordsDidChange, object: nil)
     }
 }

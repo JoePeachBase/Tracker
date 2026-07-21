@@ -28,7 +28,7 @@ final class NewCategoryViewController: UIViewController {
 
     private lazy var textField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Введите название категории"
+        textField.placeholder = "category.name.placeholder".localized
         textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         textField.backgroundColor = .ypBackground
         textField.layer.cornerRadius = 16
@@ -41,8 +41,7 @@ final class NewCategoryViewController: UIViewController {
 
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setTitle("Готово", for: .normal)
-        button.setTitleColor(.ypWhite, for: .normal)
+        button.setTitle("done.button".localized, for: .normal)
         button.backgroundColor = .ypBlack
         button.layer.cornerRadius = 16
         button.isEnabled = false
@@ -65,10 +64,10 @@ final class NewCategoryViewController: UIViewController {
         
         switch mode {
         case .create:
-            header.text = "Новая категория"
+            header.text = "new.category".localized
             updateButtonState()
         case .edit(let title):
-            header.text = "Редактирование категории"
+            header.text = "edit.category".localized
             textField.text = title
             updateButtonState()
         }
@@ -113,6 +112,7 @@ final class NewCategoryViewController: UIViewController {
     private func updateButtonState() {
         let isEnabled = !(textField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true)
         doneButton.isEnabled = isEnabled
+        doneButton.setTitleColor(isEnabled ? .ypWhite : .ypWhiteNight, for: .normal)
         doneButton.backgroundColor = isEnabled ? .ypBlack : .ypGray
     }
 }

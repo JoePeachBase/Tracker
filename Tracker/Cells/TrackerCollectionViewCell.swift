@@ -36,7 +36,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .ypWhite
+        label.textColor = .ypWhiteNight
         label.numberOfLines = 0
         return label
     }()
@@ -129,7 +129,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     func configure(tracker: Tracker, isCompleted: Bool, daysCount: Int) {
         self.tracker = tracker
         completedTracker = isCompleted
-        daysPassedLabel.text = "\(daysCount) дней"
+        daysPassedLabel.text = daysCount.localizeNumbers("numberOfDays")
         updateButtonState()
     }
     
@@ -140,3 +140,5 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         trackerCounterButton.tintColor = .ypWhite
     }
 }
+
+

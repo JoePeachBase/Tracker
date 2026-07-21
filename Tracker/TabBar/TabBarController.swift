@@ -32,24 +32,28 @@ final class TabBarController: UITabBarController {
         let trackerStore = TrackerStore(context: context)
         let categoryStore = TrackerCategoryStore(context: context)
         let recordStore = TrackerRecordStore(context: context)
+        let filterStore = FilterStore(context: context)
+        let analyticsService = AnalyticsService()
         
         
         let vc = MainViewController(
             trackerStore: trackerStore,
             categoryStore: categoryStore,
-            recordStore: recordStore
+            recordStore: recordStore,
+            filterStore: filterStore,
+            analyticsService: analyticsService
         )
         
         let trackers = UINavigationController(rootViewController: vc)
         trackers.tabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: "trackers".localized,
             image: .trackers,
             selectedImage: nil
         )
         
-        let statisticViewController = StatisticViewController()
+        let statisticViewController = StatisticViewController(recordStore: recordStore)
         statisticViewController.tabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: "statistics".localized,
             image: .statistics,
             selectedImage: nil
         )

@@ -9,6 +9,7 @@ import UIKit
 
 protocol TrackerActionProtocol {
     func add(tracker: Tracker, categoryTitle: String)
+    func update(tracker: Tracker, categoryTitle: String)
     func reload()
 }
 
@@ -16,10 +17,16 @@ final class HabitCreationViewController: TrackerCreationBaseViewController {
 
     private var selectedDays: [WeekDay] = []
 
-    override var headerTitle: String { "Новая привычка" }
+    override var headerTitle: String {
+        isEditingMode ? "edit.habit".localized : "new.habit".localized
+    }
     override var tableViewHeight: CGFloat { 150 }
     override var scheduleForNewTracker: [WeekDay]? { selectedDays }
 
+    override func prefillAdditionalFields(from tracker: Tracker) {
+        selectedDays = tracker.schedule ?? []
+    }
+    
     override func additionalCreateButtonValidation() -> Bool {
         !selectedDays.isEmpty
     }
@@ -27,13 +34,13 @@ final class HabitCreationViewController: TrackerCreationBaseViewController {
     override func configureCell(_ cell: HabitTableViewCell, at indexPath: IndexPath) {
         switch HabitRow(rawValue: indexPath.row) {
         case .category:
-            cell.configure(title: "Категория", subtitle: selectedCategory)
+            cell.configure(title: "category".localized, subtitle: selectedCategory)
         case .schedule:
             let subtitle = selectedDays.isEmpty ? nil :
                 selectedDays.sorted { $0.rawValue < $1.rawValue }
                     .map { $0.shortTitle }
                     .joined(separator: ", ")
-            cell.configure(title: "Расписание", subtitle: subtitle)
+            cell.configure(title: "schedule".localized, subtitle: subtitle)
         default:
             cell.configure(title: "Новая строка", subtitle: nil)
         }
@@ -71,6 +78,3 @@ final class HabitCreationViewController: TrackerCreationBaseViewController {
         }
     }
 }
-
-
-

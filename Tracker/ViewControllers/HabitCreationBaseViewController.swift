@@ -8,6 +8,15 @@
 import UIKit
 
 class TrackerCreationBaseViewController: UIViewController {
+    
+    private(set) var editingTracker: Tracker?
+    private var editingCategoryTitle: String?
+    
+    var isEditingMode: Bool { editingTracker != nil }
+
+    var createButtonTitle: String {
+        isEditingMode ? "save.button".localized : "create.button".localized
+    }
 
     var trackersViewController: TrackerActionProtocol?
     let categoryStore: TrackerCategoryStore
@@ -85,7 +94,7 @@ class TrackerCreationBaseViewController: UIViewController {
     lazy var trackerNameTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = "tracker.name.placeholder".localized
         textField.backgroundColor = .ypBackground
         textField.layer.cornerRadius = 16
         textField.addPadding(16)
@@ -98,7 +107,8 @@ class TrackerCreationBaseViewController: UIViewController {
     lazy var charLimitsLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Ограничение \(charsLimit) символов"
+        let localizedFormatString = "chars.limit".localized
+        label.text = String(format: localizedFormatString, charsLimit)
         label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         label.textColor = .ypRed
         label.isHidden = true
@@ -123,7 +133,7 @@ class TrackerCreationBaseViewController: UIViewController {
     lazy var cancelButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle("cancel.button".localized, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.ypRed, for: .normal)
         button.layer.borderWidth = 1
@@ -136,7 +146,7 @@ class TrackerCreationBaseViewController: UIViewController {
     lazy var createButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Создать", for: .normal)
+        button.setTitle(createButtonTitle, for: .normal)
         button.backgroundColor = .ypGray
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.ypWhite, for: .normal)
@@ -146,8 +156,10 @@ class TrackerCreationBaseViewController: UIViewController {
         return button
     }()
     
-    init(categoryStore: TrackerCategoryStore) {
+    init(categoryStore: TrackerCategoryStore, editingTracker: Tracker? = nil, editingCategoryTitle: String? = nil) {
         self.categoryStore = categoryStore
+        self.editingTracker = editingTracker
+        self.editingCategoryTitle = editingCategoryTitle
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -157,10 +169,12 @@ class TrackerCreationBaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         header.text = headerTitle
+        prefillIfNeeded()
         setupLayoutAndConstraints()
         setupTableView()
         setupTextField()
         setupCollectionView()
+        updateCreateButtonState()
     }
 
     @objc private func cancelButtonDidTapped() {
@@ -175,14 +189,18 @@ class TrackerCreationBaseViewController: UIViewController {
         else { return }
 
         let newTracker = Tracker(
-            id: UUID(),
+            id: editingTracker?.id ?? UUID(),
             name: text,
             emoji: emoji,
             schedule: scheduleForNewTracker,
             color: color,
-            createdDate: Date()
+            createdDate: editingTracker?.createdDate ?? Date()
         )
-        trackersViewController?.add(tracker: newTracker, categoryTitle: categoryTitle)
+        if isEditingMode {
+            trackersViewController?.update(tracker: newTracker, categoryTitle: categoryTitle)
+        } else {
+            trackersViewController?.add(tracker: newTracker, categoryTitle: categoryTitle)
+        }
         trackersViewController?.reload()
         view.window?.rootViewController?.dismiss(animated: true)
     }
@@ -195,7 +213,21 @@ class TrackerCreationBaseViewController: UIViewController {
             && additionalCreateButtonValidation()
         createButton.isEnabled = isEnabled
         createButton.backgroundColor = isEnabled ? .ypBlack : .ypGray
+        createButton.setTitleColor(isEnabled ? .ypWhite : .ypWhiteNight, for: .normal)
     }
+    
+    private func prefillIfNeeded() {
+        guard let tracker = editingTracker else { return }
+        trackerNameTextField.text = tracker.name
+        selectedEmojiIndex = emojis.firstIndex(of: tracker.emoji)
+        selectedColorIndex = colors.firstIndex {
+            ColorMarshalling.hexString(from: $0) == ColorMarshalling.hexString(from: tracker.color)
+        }
+        selectedCategory = editingCategoryTitle
+        prefillAdditionalFields(from: tracker)
+    }
+    
+    func prefillAdditionalFields(from tracker: Tracker) {}
 
     private func setupLayoutAndConstraints() {
         view.backgroundColor = .ypWhite
@@ -338,8 +370,8 @@ extension TrackerCreationBaseViewController: UICollectionViewDelegate {
         guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as? SupplementaryView
         else { return UICollectionReusableView() }
         switch indexPath.section {
-        case 0: view.titleLabel.text = "Emoji"
-        case 1: view.titleLabel.text = "Цвет"
+        case 0: view.titleLabel.text = "emoji".localized
+        case 1: view.titleLabel.text = "color".localized
         default: view.titleLabel.text = ""
         }
         return view

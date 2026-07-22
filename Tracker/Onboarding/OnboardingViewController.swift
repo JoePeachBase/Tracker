@@ -15,6 +15,7 @@ final class OnboardingViewController: UIPageViewController {
     
     private lazy var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
+        pageControl.overrideUserInterfaceStyle = .light
         pageControl.currentPage = 0
         pageControl.numberOfPages = pages.count
         pageControl.currentPageIndicatorTintColor = .ypBlack
@@ -25,8 +26,9 @@ final class OnboardingViewController: UIPageViewController {
     
     private lazy var button: UIButton = {
         let button = UIButton()
+        button.overrideUserInterfaceStyle = .light
         button.backgroundColor = .ypBlack
-        button.setTitle("Вот это технологии!", for: .normal)
+        button.setTitle("onboarding.button".localized, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(buttonDidTapped), for: .touchUpInside)
@@ -67,8 +69,8 @@ final class OnboardingViewController: UIPageViewController {
     }
     
     private func setupOnboardingPages() {
-        let firstPage = createOnboardingPage(with: .onboardingFirstPage, text: "Отслеживайте только то, что хотите")
-        let secondPage = createOnboardingPage(with: .onboardingSecondPage, text: "Даже если это\nне литры воды и йога")
+        let firstPage = createOnboardingPage(with: .onboardingFirstPage, text: "onboarding.firstpage.title".localized)
+        let secondPage = createOnboardingPage(with: .onboardingSecondPage, text: "onboarding.secondpage.title".localized)
         
         pages.append(firstPage)
         pages.append(secondPage)
@@ -96,6 +98,7 @@ final class OnboardingViewController: UIPageViewController {
         onboardingViewController.view.addSubview(imageView)
         
         let label = UILabel()
+        label.overrideUserInterfaceStyle = .light
         label.text = text
         label.numberOfLines = 2
         label.textColor = .ypBlack

@@ -10,6 +10,7 @@ import CoreData
 
 enum TrackerStoreError: Error {
     case decodingFailed
+    case trackerNotFound
 }
 
 protocol TrackerStoreDelegate: AnyObject {
@@ -56,6 +57,30 @@ final class TrackerStore: NSObject {
         coreData.createdDate = tracker.createdDate
         coreData.schedule = tracker.schedule.map { scheduleConverter.toString($0)} as NSObject?
         coreData.category = category
+        try context.save()
+    }
+    
+    func updateTracker(_ tracker: Tracker, categoryTitle: String) throws {
+        let request = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
+        request.fetchLimit = 1
+        
+        guard let trackerCoreData = try context.fetch(request).first else {
+            throw TrackerStoreError.trackerNotFound
+        }
+        
+        trackerCoreData.name = tracker.name
+        trackerCoreData.emoji = tracker.emoji
+        trackerCoreData.colorHex = ColorMarshalling.hexString(from: tracker.color)
+        trackerCoreData.schedule = tracker.schedule.map { scheduleConverter.toString($0) } as NSObject?
+        
+        if trackerCoreData.category?.title != categoryTitle {
+            let categoryRequest = TrackerCategoryCoreData.fetchRequest()
+            categoryRequest.predicate = NSPredicate(format: "title == %@", categoryTitle)
+            categoryRequest.fetchLimit = 1
+            trackerCoreData.category = try context.fetch(categoryRequest).first
+        }
+        
         try context.save()
     }
     

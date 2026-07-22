@@ -93,7 +93,9 @@ final class TrackerCategoryStore: NSObject {
                 color: ColorMarshalling.color(from: colorHex),
                 createdDate: createdDate
             )
-        } ?? []
+        }
+        .sorted { $0.createdDate < $1.createdDate } 
+        ?? []
         
         return TrackerCategory(title: title, trackers: trackers)
     }

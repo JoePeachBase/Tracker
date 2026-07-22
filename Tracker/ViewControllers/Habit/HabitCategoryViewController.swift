@@ -18,7 +18,7 @@ final class HabitCategoryViewController: UIViewController {
     
     private lazy var header: UILabel = {
         let label = UILabel()
-        label.text = "Категория"
+        label.text = "category".localized
         label.textColor = .ypBlack
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -39,7 +39,7 @@ final class HabitCategoryViewController: UIViewController {
     private lazy var addCategoryButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Добавить категорию", for: .normal)
+        button.setTitle("add.category.button".localized, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.ypWhite, for: .normal)
         button.backgroundColor = .ypBlack
@@ -57,7 +57,7 @@ final class HabitCategoryViewController: UIViewController {
         emptyScreenImage.translatesAutoresizingMaskIntoConstraints = false
         
         let emptyScreenText = UILabel()
-        emptyScreenText.text = "Привычки и события можно\nобъединить по смыслу"
+        emptyScreenText.text = "categories.empty.screen.label".localized
         emptyScreenText.numberOfLines = 0
         emptyScreenText.textAlignment = .center
         emptyScreenText.font = UIFont.systemFont(ofSize: 12, weight: .medium)
@@ -202,7 +202,7 @@ extension HabitCategoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         UIContextMenuConfiguration(actionProvider: { [weak self] _ in
             guard let self else { return nil }
-            let edit = UIAction(title: "Редактировать") { _ in
+            let edit = UIAction(title: "edit".localized) { _ in
                 let currentTitle = self.viewModel.cellViewModels[indexPath.row].title
                 let vc = NewCategoryViewController(mode: .edit(currentTitle))
                 vc.onDone = { newTitle in
@@ -210,7 +210,7 @@ extension HabitCategoryViewController: UITableViewDelegate {
                 }
                 self.present(vc, animated: true)
             }
-            let delete = UIAction(title: "Удалить", attributes: .destructive) { _ in
+            let delete = UIAction(title: "delete".localized, attributes: .destructive) { _ in
                 self.confirmDelete(at: indexPath.row)
             }
             return UIMenu(children: [edit, delete])
@@ -220,13 +220,13 @@ extension HabitCategoryViewController: UITableViewDelegate {
     private func confirmDelete(at index: Int) {
         let alert = UIAlertController(
             title: nil,
-            message: "Эта категория точно не нужна?",
+            message: "category.not.needed".localized,
             preferredStyle: .actionSheet
         )
-        alert.addAction(UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "delete".localized, style: .destructive) { [weak self] _ in
             self?.viewModel.deleteCategory(at: index)
         })
-        alert.addAction(UIAlertAction(title: "Отменить", style: .cancel))
+        alert.addAction(UIAlertAction(title: "cancel.button".localized, style: .cancel))
         present(alert, animated: true)
     }
 }

@@ -9,12 +9,12 @@ import UIKit
 
 final class IrregularEventCreationViewController: TrackerCreationBaseViewController {
 
-    override var headerTitle: String { "Новое нерегулярное событие" }
+    override var headerTitle: String { isEditingMode ? "edit.irregular.event".localized : "new.irregular.event".localized }
     override var tableViewHeight: CGFloat { 75 }
     override var scheduleForNewTracker: [WeekDay]? { nil }
 
     override func configureCell(_ cell: HabitTableViewCell, at indexPath: IndexPath) {
-        cell.configure(title: "Категория", subtitle: selectedCategory)
+        cell.configure(title: "category".localized, subtitle: selectedCategory)
     }
 
     override func handleRowSelection(at indexPath: IndexPath) {

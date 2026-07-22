@@ -13,6 +13,7 @@ final class FiltersViewController: UIViewController {
 
     private let currentFilter: TrackerFilter
     private let separatorTag = 999
+    private let rowHeight: CGFloat = 75
 
     private lazy var header: UILabel = {
         let label = UILabel()
@@ -45,11 +46,11 @@ final class FiltersViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .ypWhite
         setupLayoutAndConstraints()
     }
 
     private func setupLayoutAndConstraints() {
+        view.backgroundColor = .ypWhite
         view.addSubview(header)
         view.addSubview(filtersTableView)
 
@@ -60,7 +61,7 @@ final class FiltersViewController: UIViewController {
             filtersTableView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 30),
             filtersTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             filtersTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            filtersTableView.heightAnchor.constraint(equalToConstant: 75 * CGFloat(TrackerFilter.allCases.count))
+            filtersTableView.heightAnchor.constraint(equalToConstant: rowHeight * CGFloat(TrackerFilter.allCases.count))
         ])
     }
 }
@@ -87,7 +88,7 @@ extension FiltersViewController: UITableViewDataSource {
 }
 
 extension FiltersViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 75 }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { rowHeight }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

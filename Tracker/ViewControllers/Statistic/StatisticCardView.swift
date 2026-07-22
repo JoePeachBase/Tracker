@@ -5,8 +5,6 @@
 //  Created by Dinar Mukhlisov on 22.07.2026.
 //
 
-import Foundation
-
 import UIKit
 
 final class StatisticCardView: UIView {
